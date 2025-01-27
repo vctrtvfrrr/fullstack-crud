@@ -1,11 +1,16 @@
 # Full-stack CRUD
 
-### Common commands
+## Getting Started
 
-- `node server.js` - start the node server providing the data
-- `npm run dev` - run the development env with nextjs
+Duplicate the `.env.example` file and rename the copy to `.env`.
 
-### Typography
+Change the `NODE_ENV` variable inside `.env` to your preferred environment ('production' or 'development').
+
+Up the complete environment with Docker: `docker compose up -d`.
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Typography
 
 Follow this global css to include font custom using in figma file:
 
