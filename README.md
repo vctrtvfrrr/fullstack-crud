@@ -1,4 +1,4 @@
-# Front-end platform test
+# Full-stack CRUD
 
 ### Common commands
 
