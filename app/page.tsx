@@ -1,38 +1,47 @@
-import Head from "next/head";
-import Link from "next/link";
+import type { Metadata } from "next";
 import Image from "next/image";
-import favoriteIcon from "../public/icons/heart.svg";
-import coverPic from "../public/assets/images/amy-cover.jpeg";
+import Link from "next/link";
+import slugify from "slugify";
+import { db } from "../drizzle/db";
 
-export default function HomePage() {
+const songs = await db.query.songs.findMany();
+
+export const metadata: Metadata = {
+  title: "Your Library",
+  description: `You have ${songs.length} songs in your library`,
+};
+
+function makeSlug(artist: string, title: string) {
+  return `/${slugify(artist)}/${slugify(title)}`;
+}
+
+export default async function HomePage() {
   return (
     <div>
-      <Head>
-        <title>Your Library</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <h2 className="font-semibold text-3xl">Your Library</h2>
-      <p className="leading-5 mt-3 opacity-50">
-        You have 10 songs in your library
-      </p>
+      <h2 className="font-semibold text-3xl">{metadata.title?.toString()}</h2>
+      <p className="leading-5 mt-3 opacity-50">{metadata.description}</p>
 
       <ul className="mt-10 grid md:grid-cols-3 lg:grid-cols-5 gap-8">
-        {[...Array(10)].map((_, index) => (
+        {songs.map((song, index) => (
           <li key={index} className="bg-neutral-800 rounded-md overflow-hidden">
-            <Link href="/song-page">
+            <Link href={makeSlug(song.artist, song.title)}>
               <Image
-                src={coverPic}
-                alt="Song Name by Artist Name"
+                priority
+                src={`/assets/images/${song.cover}`}
+                alt={`${song.title} by ${song.artist}`}
                 className="w-full"
+                width={200}
+                height={200}
               />
             </Link>
             <div className="relative p-4">
               <h3 className="text-lg leading-5 font-semibold">
-                <Link href="/song-page">Song Page</Link>
+                <Link href={makeSlug(song.artist, song.title)}>
+                  {song.title}
+                </Link>
               </h3>
               <p className="text-neutral-500 text-xs font-semibold mt-3">
-                Artist Name
+                {song.artist}
               </p>
               <button
                 type="button"
@@ -41,7 +50,7 @@ export default function HomePage() {
               >
                 <Image
                   priority
-                  src={favoriteIcon}
+                  src="/icons/heart.svg"
                   alt="Favorite icon"
                   className="absolute bottom-4 right-4"
                   width={20}

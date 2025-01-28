@@ -31,9 +31,7 @@ export default function RootLayout({
           </div>
         </header>
 
-        <main className="container my-12">
-          {children}
-        </main>
+        <main className="container my-12">{children}</main>
       </body>
     </html>
   );
