@@ -1,46 +1,57 @@
 import Head from "next/head";
+import Link from "next/link";
+import Image from "next/image";
+import favoriteIcon from "../public/icons/heart.svg";
+import coverPic from "../public/assets/images/amy-cover.jpeg";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div>
       <Head>
-        <title>Create Next App</title>
+        <title>Your Library</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      <h2 className="font-semibold text-3xl">Your Library</h2>
+      <p className="leading-5 mt-3 opacity-50">
+        You have 10 songs in your library
+      </p>
 
-        <p>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div>
-          <a href="https://nextjs.org/docs">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a href="https://github.com/vercel/next.js/tree/master/examples">
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app">
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+      <ul className="mt-10 grid md:grid-cols-3 lg:grid-cols-5 gap-8">
+        {[...Array(10)].map((_, index) => (
+          <li key={index} className="bg-neutral-800 rounded-md overflow-hidden">
+            <Link href="/song-page">
+              <Image
+                src={coverPic}
+                alt="Song Name by Artist Name"
+                className="w-full"
+              />
+            </Link>
+            <div className="relative p-4">
+              <h3 className="text-lg leading-5 font-semibold">
+                <Link href="/song-page">Song Page</Link>
+              </h3>
+              <p className="text-neutral-500 text-xs font-semibold mt-3">
+                Artist Name
+              </p>
+              <button
+                type="button"
+                title="Favorite this song"
+                className="focus:outline-none"
+              >
+                <Image
+                  priority
+                  src={favoriteIcon}
+                  alt="Favorite icon"
+                  className="absolute bottom-4 right-4"
+                  width={20}
+                  height={20}
+                />
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
