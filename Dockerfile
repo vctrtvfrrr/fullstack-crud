@@ -12,7 +12,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
-FROM deps as development
+FROM deps AS development
 ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY . .
