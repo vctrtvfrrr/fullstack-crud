@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import playIcon from "../../public/icons/play.svg";
-import favoriteIcon from "../../public/icons/heart-filled.svg";
+import { PiHeartStraightFill, PiPlayFill } from "react-icons/pi";
 import coverPic from "../../public/assets/images/ff-cover.jpeg";
 import posterPic from "../../public/assets/images/ff-poster.png";
 
@@ -21,20 +20,13 @@ export default function SongPage() {
         <div className="flex flex-col justify-between ml-8 py-4">
           <div className="flex">
             <button className="bg-white w-16 h-16 flex justify-center items-center rounded-full">
-              <Image priority src={playIcon} alt="Play icon" />
+              <PiPlayFill size={20} color="black" />
             </button>
 
             <div className="flex flex-col justify-between ml-9">
               <div className="flex justify-between">
                 <h2 className="text-3xl font-semibold">Song Name</h2>
-                <Image
-                  priority
-                  src={favoriteIcon}
-                  alt="Favorite icon"
-                  className=""
-                  width={20}
-                  height={20}
-                />
+                <PiHeartStraightFill size={20} color="red" />
               </div>
 
               <h3 className="leading-5">

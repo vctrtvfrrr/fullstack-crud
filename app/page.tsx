@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { PiHeartStraightLight } from "react-icons/pi";
 import slugify from "slugify";
 import { db } from "../drizzle/db";
 
@@ -46,16 +47,9 @@ export default async function HomePage() {
               <button
                 type="button"
                 title="Favorite this song"
-                className="focus:outline-none"
+                className="focus:outline-none absolute bottom-4 right-4"
               >
-                <Image
-                  priority
-                  src="/icons/heart.svg"
-                  alt="Favorite icon"
-                  className="absolute bottom-4 right-4"
-                  width={20}
-                  height={20}
-                />
+                <PiHeartStraightLight size={20} />
               </button>
             </div>
           </li>
