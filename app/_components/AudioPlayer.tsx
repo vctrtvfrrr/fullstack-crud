@@ -10,13 +10,13 @@ export default function AudioPlayer({
 }: {
   song: typeof songsTable.$inferSelect;
 }) {
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const $audio = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
   function togglePlay() {
-    const audio = audioRef.current;
+    const audio = $audio.current;
     if (audio) {
       if (isPlaying) {
         audio.pause();
@@ -28,7 +28,7 @@ export default function AudioPlayer({
   }
 
   function handleSeek(e: ChangeEvent<HTMLInputElement>) {
-    const audio = audioRef.current;
+    const audio = $audio.current;
     if (audio) {
       const newTime = (Number(e.target.value) / 100) * duration;
       audio.currentTime = newTime;
@@ -43,7 +43,7 @@ export default function AudioPlayer({
   }
 
   useEffect(() => {
-    const audio = audioRef.current;
+    const audio = $audio.current;
 
     if (audio === null) return;
 
@@ -75,7 +75,7 @@ export default function AudioPlayer({
 
   return (
     <div className="flex flex-col justify-between ml-8 py-4">
-      <audio ref={audioRef} src={`/assets/audio/${song.audio}`} />
+      <audio ref={$audio} src={`/assets/audio/${song.audio}`} />
       <div className="flex">
         <button
           className="bg-white w-16 h-16 flex justify-center items-center rounded-full text-black"

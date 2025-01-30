@@ -1,16 +1,30 @@
+"use client";
+
+import { songsTable } from "@/drizzle/schema";
 import Image from "next/image";
-import Script from "next/script";
+import { useEffect, useState } from "react";
 import {
   PiMusicNotesPlusFill,
   PiNotePencilFill,
   PiTrashLight,
 } from "react-icons/pi";
-import { getSongs } from "../_repositories/songs";
 import FavoriteButton from "../_components/FavoriteButton";
+import Modal from "../_components/Modal";
+import { getSongs } from "../_repositories/songs";
+import SongUploadForm from "./form";
 
-export default async function AdminPage() {
-  const songs = await getSongs();
+export default function AdminPage() {
+  const [songs, setSongs] = useState<Array<typeof songsTable.$inferSelect>>([]);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
+  async function fetchSongs() {
+    const songs = await getSongs();
+    setSongs(songs);
+  }
+
+  useEffect(() => {
+    fetchSongs();
+  }, []);
   return (
     <div>
       <div className="relative flex flex-col w-full h-full">
@@ -24,7 +38,7 @@ export default async function AdminPage() {
               <button
                 type="button"
                 className="inline-flex items-center rounded-md bg-neutral-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-neutral-700 focus:shadow-none active:bg-neutral-700 hover:bg-neutral-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                data-dialog-target="modal"
+                onClick={() => setIsFormModalOpen(true)}
               >
                 <PiMusicNotesPlusFill className="mr-1.5" />
                 Add song
@@ -149,115 +163,17 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      <div
-        data-dialog-backdrop="modal"
-        data-dialog-backdrop-close="true"
-        className="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300"
+      <Modal
+        isOpen={isFormModalOpen}
+        closeAction={() => setIsFormModalOpen(false)}
       >
-        <div
-          data-dialog="modal"
-          className="relative mx-auto flex w-full max-w-[24rem] flex-col rounded-xl bg-white bg-clip-border text-neutral-700 shadow-md"
-        >
-          <div className="flex flex-col p-6">
-            <h4 className="text-2xl mb-1 font-semibold text-neutral-700">
-              Add New Song
-            </h4>
-            <p className="mb-3 mt-1 text-neutral-400">
-              Enter or edit each information for the song.
-            </p>
-
-            <div className="w-full max-w-sm min-w-[200px] mt-4">
-              <label className="block mb-1 text-sm text-neutral-700">
-                Title
-              </label>
-              <input
-                type="text"
-                className="w-full h-10 bg-transparent placeholder:text-neutral-400 text-neutral-700 text-sm border border-neutral-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-neutral-400 hover:border-neutral-400 shadow-sm focus:shadow-md"
-                placeholder="Enter the song title"
-              />
-            </div>
-            <div className="w-full max-w-sm min-w-[200px] mt-4">
-              <label className="block mb-1 text-sm text-neutral-700">
-                Artist
-              </label>
-              <input
-                type="text"
-                className="w-full h-10 bg-transparent placeholder:text-neutral-400 text-neutral-700 text-sm border border-neutral-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-neutral-400 hover:border-neutral-400 shadow-sm focus:shadow-md"
-                placeholder="Enter the song artist"
-              />
-            </div>
-            <div className="w-full max-w-sm min-w-[200px] mt-4">
-              <label className="block mb-1 text-sm text-neutral-700">
-                Album Title
-              </label>
-              <input
-                type="text"
-                className="w-full h-10 bg-transparent placeholder:text-neutral-400 text-neutral-700 text-sm border border-neutral-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-neutral-400 hover:border-neutral-400 shadow-sm focus:shadow-md"
-                placeholder="Enter the album title"
-              />
-            </div>
-            <div className="w-full max-w-sm min-w-[200px] mt-4">
-              <label className="block mb-1 text-sm text-neutral-700">
-                Album Year
-              </label>
-              <input
-                type="number"
-                className="w-full h-10 bg-transparent placeholder:text-neutral-400 text-neutral-700 text-sm border border-neutral-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-neutral-400 hover:border-neutral-400 shadow-sm focus:shadow-md"
-                placeholder="Enter the album year"
-              />
-            </div>
-            <div className="w-full max-w-sm min-w-[200px] mt-4">
-              <label className="block mb-1 text-sm text-neutral-700">
-                Album Cover
-              </label>
-              <input
-                type="file"
-                className="w-full h-10 bg-transparent placeholder:text-neutral-400 text-neutral-700 text-sm border border-neutral-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-neutral-400 hover:border-neutral-400 shadow-sm focus:shadow-md"
-              />
-            </div>
-            <div className="w-full max-w-sm min-w-[200px] mt-4">
-              <label className="block mb-1 text-sm text-neutral-700">
-                Artist Poster
-              </label>
-              <input
-                type="file"
-                className="w-full h-10 bg-transparent placeholder:text-neutral-400 text-neutral-700 text-sm border border-neutral-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-neutral-400 hover:border-neutral-400 shadow-sm focus:shadow-md"
-              />
-            </div>
-            <div className="w-full max-w-sm min-w-[200px] mt-4">
-              <label className="block mb-1 text-sm text-neutral-700">
-                Audio Track
-              </label>
-              <input
-                type="file"
-                className="w-full h-10 bg-transparent placeholder:text-neutral-400 text-neutral-700 text-sm border border-neutral-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-neutral-400 hover:border-neutral-400 shadow-sm focus:shadow-md"
-              />
-            </div>
-          </div>
-
-          <div className="p-6 pt-0">
-            <div className="flex space-x-2">
-              <button
-                className="w-full mx-auto select-none rounded border border-red-600 py-2 px-4 text-center text-sm font-semibold text-red-600 transition-all hover:bg-red-600 hover:text-white hover:shadow-md hover:shadow-red-600/20 active:bg-red-700 active:text-white active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-                data-dialog-close="true"
-              >
-                Cancel
-              </button>
-
-              <button
-                className="w-full mx-auto select-none rounded bg-neutral-800 py-2 px-4 text-center text-sm font-semibold text-white shadow-md shadow-neutral-900/10 transition-all hover:shadow-lg hover:shadow-neutral-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-                data-dialog-close="true"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Script src="https://unpkg.com/@material-tailwind/html@latest/scripts/dialog.js" />
+        <SongUploadForm
+          closeAction={async () => {
+            await fetchSongs();
+            setIsFormModalOpen(false);
+          }}
+        />
+      </Modal>
     </div>
   );
 }
