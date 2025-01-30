@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import slugify from "slugify";
-import { db } from "../drizzle/db";
+import { getSongs } from "./_repositories/songs";
 import FavoriteButton from "./components/FavoriteButton";
-import { songsTable } from "@/drizzle/schema";
-import { asc } from "drizzle-orm";
 
 export const metadata: Metadata = {
   title: "Your Library",
@@ -13,10 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const songs = await db
-    .select()
-    .from(songsTable)
-    .orderBy(asc(songsTable.artist), asc(songsTable.title));
+  const songs = await getSongs();
 
   function makeSlug(artist: string, title: string) {
     return `/${slugify(artist)}/${slugify(title)}`;

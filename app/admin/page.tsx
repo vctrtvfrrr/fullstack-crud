@@ -1,4 +1,3 @@
-import { db } from "@/drizzle/db";
 import Image from "next/image";
 import Script from "next/script";
 import {
@@ -6,10 +5,11 @@ import {
   PiNotePencilFill,
   PiTrashLight,
 } from "react-icons/pi";
+import { getSongs } from "../_repositories/songs";
 import FavoriteButton from "../components/FavoriteButton";
 
 export default async function AdminPage() {
-  const songs = await db.query.songs.findMany();
+  const songs = await getSongs();
 
   return (
     <div>
