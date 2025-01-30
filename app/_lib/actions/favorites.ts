@@ -1,16 +1,16 @@
 "use server";
 
 import { db } from "@/drizzle/db";
-import { songs } from "@/drizzle/schema";
+import { songsTable } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 
 export async function updateFavorite(songId: number, favorite: boolean) {
   try {
     const result = await db
-      .update(songs)
+      .update(songsTable)
       .set({ favorite })
-      .where(eq(songs.id, songId))
-      .returning({ favorite: songs.favorite });
+      .where(eq(songsTable.id, songId))
+      .returning({ favorite: songsTable.favorite });
 
     return result[0].favorite;
   } catch (error) {

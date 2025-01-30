@@ -6,8 +6,9 @@ import {
   smallint,
   varchar,
 } from "drizzle-orm/pg-core";
+import { timestamps } from "./columns.helpers";
 
-export const songs = pgTable("songs", {
+const songs = pgTable("songs", {
   id: serial("id").primaryKey(),
   artist: varchar("artist", { length: 100 }).notNull(),
   title: varchar("title", { length: 100 }).notNull(),
@@ -17,10 +18,13 @@ export const songs = pgTable("songs", {
   poster: varchar("poster", { length: 256 }),
   audio: varchar("audio", { length: 256 }),
   favorite: boolean().default(false).notNull(),
+  ...timestamps,
 });
 
-export const relatedSongs = pgTable("related_songs", {
+const relatedSongs = pgTable("related_songs", {
   id: serial("id").primaryKey(),
   songId: integer("song_id").references(() => songs.id),
   relatedSongId: integer("related_song_id").references(() => songs.id),
 });
+
+export { songs as songsTable, relatedSongs as relatedSongsTable };

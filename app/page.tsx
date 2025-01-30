@@ -4,7 +4,7 @@ import Link from "next/link";
 import slugify from "slugify";
 import { db } from "../drizzle/db";
 import FavoriteButton from "./components/FavoriteButton";
-import { songs as songsTable } from "@/drizzle/schema";
+import { songsTable } from "@/drizzle/schema";
 import { asc } from "drizzle-orm";
 
 export const metadata: Metadata = {
