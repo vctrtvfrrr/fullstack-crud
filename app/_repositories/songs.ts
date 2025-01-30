@@ -38,7 +38,7 @@ export async function createSong(song: typeof songsTable.$inferInsert) {
 
 export async function updateSong(
   id: number,
-  song: typeof songsTable.$inferSelect
+  song: Partial<typeof songsTable.$inferSelect>
 ) {
   return await db
     .update(songsTable)

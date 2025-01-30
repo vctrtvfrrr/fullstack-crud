@@ -1,11 +1,16 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { saveSong } from "../_actions/save-song";
+import { songsTable } from "@/drizzle/schema";
 
 export default function SongUploadForm({
+  song,
   closeAction,
-}: Readonly<{ closeAction: () => void }>) {
+}: Readonly<{
+  song: typeof songsTable.$inferSelect | undefined;
+  closeAction: () => void;
+}>) {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [albumTitle, setAlbumTitle] = useState("");
@@ -40,6 +45,8 @@ export default function SongUploadForm({
     formData.append("poster", poster);
     formData.append("audio", audio);
 
+    if (song) formData.append("id", song.id.toString());
+
     const response = await saveSong(formData);
 
     if (response.saved) {
@@ -49,11 +56,20 @@ export default function SongUploadForm({
     }
   }
 
+  useEffect(() => {
+    if (song) {
+      setTitle(song.title);
+      setArtist(song.artist);
+      setAlbumTitle(song.albumTitle || "");
+      setAlbumYear(song?.albumYear?.toString() || "");
+    }
+  }, [song]);
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col p-6">
         <h4 className="text-2xl mb-1 font-semibold text-neutral-700">
-          Add New Song
+          {song ? "Editing Song" : "Add New Song"}
         </h4>
         <p className="mb-3 mt-1 text-neutral-400">
           Enter or edit each information for the song.

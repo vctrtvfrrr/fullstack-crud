@@ -19,27 +19,34 @@ export default function AdminPage() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentDeleteSong, setCurrentDeleteSong] = useState<Song>();
+  const [currentSong, setCurrentSong] = useState<Song>();
 
   async function fetchSongs() {
     const songs = await getSongs();
     setSongs(songs);
+    setCurrentSong(undefined);
   }
 
   useEffect(() => {
     fetchSongs();
   }, []);
 
-  function openDeleteDialog(song: typeof songsTable.$inferSelect) {
-    setCurrentDeleteSong(song);
+  function openFormModal(song?: Song) {
+    setCurrentSong(song);
+    setIsFormModalOpen(true);
+  }
+
+  function openDeleteDialog(song: Song) {
+    setCurrentSong(song);
     setIsDeleteDialogOpen(true);
   }
 
   async function handleDelete() {
-    if (!currentDeleteSong) return;
-    await deleteSong(currentDeleteSong.id);
+    if (!currentSong) return;
+    await deleteSong(currentSong.id);
     await fetchSongs();
     setIsDeleteDialogOpen(false);
+    setCurrentSong(undefined);
   }
 
   return (
@@ -55,7 +62,7 @@ export default function AdminPage() {
               <button
                 type="button"
                 className="inline-flex items-center rounded-md bg-neutral-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow-lg focus:bg-neutral-700 focus:shadow-none active:bg-neutral-700 hover:bg-neutral-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                onClick={() => setIsFormModalOpen(true)}
+                onClick={() => openFormModal()}
               >
                 <PiMusicNotesPlusFill className="mr-1.5" />
                 Add song
@@ -161,6 +168,7 @@ export default function AdminPage() {
                     <button
                       type="button"
                       className="rounded-md border border-transparent py-2 px-4 inline-flex items-center text-center text-sm transition-all text-neutral-600 hover:bg-neutral-100 focus:bg-neutral-100 active:bg-neutral-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                      onClick={() => openFormModal(song)}
                     >
                       <PiNotePencilFill size={16} className="mr-1.5" />
                       Edit
@@ -186,6 +194,7 @@ export default function AdminPage() {
         closeAction={() => setIsFormModalOpen(false)}
       >
         <SongUploadForm
+          song={currentSong}
           closeAction={async () => {
             await fetchSongs();
             setIsFormModalOpen(false);
@@ -197,10 +206,10 @@ export default function AdminPage() {
         isOpen={isDeleteDialogOpen}
         closeAction={() => setIsDeleteDialogOpen(false)}
       >
-        {currentDeleteSong && (
+        {currentSong && (
           <div className="flex flex-col p-6">
             <h4 className="text-xl mb-1 font-semibold text-neutral-700 text-center">
-              Deleting &quot;<em>{currentDeleteSong.title}</em>&quot;
+              Deleting &quot;<em>{currentSong.title}</em>&quot;
             </h4>
             <p className="mb-3 mt-1 text-neutral-500 text-center">
               Are you sure you want to delete this song?

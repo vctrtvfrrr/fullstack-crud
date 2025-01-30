@@ -4,7 +4,7 @@ import { writeFileSync } from "node:fs";
 import { dirname, extname, join } from "node:path";
 import slugify from "slugify";
 import { fileURLToPath } from "url";
-import { createSong } from "../_repositories/songs";
+import { createSong, updateSong } from "../_repositories/songs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -41,16 +41,29 @@ export async function saveSong(formData: FormData) {
     const poster = await saveFile(inputData.poster, "images", `${slug}-poster`);
     const audio = await saveFile(inputData.audio, "audio", `${slug}`);
 
-    await createSong({
-      title: inputData.title,
-      artist: inputData.artist,
-      albumTitle: inputData.albumTitle,
-      albumYear: inputData.albumYear,
-      cover,
-      poster,
-      audio,
-      slug,
-    });
+    if (formData.get("id")) {
+      await updateSong(Number(formData.get("id")), {
+        title: inputData.title,
+        artist: inputData.artist,
+        albumTitle: inputData.albumTitle,
+        albumYear: inputData.albumYear,
+        cover,
+        poster,
+        audio,
+        slug,
+      });
+    } else {
+      await createSong({
+        title: inputData.title,
+        artist: inputData.artist,
+        albumTitle: inputData.albumTitle,
+        albumYear: inputData.albumYear,
+        cover,
+        poster,
+        audio,
+        slug,
+      });
+    }
 
     return {
       saved: true,
