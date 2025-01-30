@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   pgTable,
   serial,
@@ -15,6 +16,7 @@ export const songs = pgTable("songs", {
   cover: varchar("cover", { length: 256 }),
   poster: varchar("poster", { length: 256 }),
   audio: varchar("audio", { length: 256 }),
+  favorite: boolean().default(false).notNull(),
 });
 
 export const relatedSongs = pgTable("related_songs", {

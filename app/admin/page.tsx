@@ -6,6 +6,7 @@ import {
   PiNotePencilFill,
   PiTrashLight,
 } from "react-icons/pi";
+import FavoriteButton from "../components/FavoriteButton";
 
 export default async function AdminPage() {
   const songs = await db.query.songs.findMany();
@@ -54,6 +55,11 @@ export default async function AdminPage() {
                 <th className="p-4 border-y border-neutral-800 bg-neutral-950">
                   <p className="flex items-center justify-between gap-2 font-sans text-sm  font-normal leading-none text-neutral-400">
                     Audio
+                  </p>
+                </th>
+                <th className="p-4 border-y border-neutral-800 bg-neutral-950">
+                  <p className="flex items-center justify-between gap-2 font-sans text-sm  font-normal leading-none text-neutral-400">
+                    Favorite
                   </p>
                 </th>
                 <th className="p-4 border-y border-neutral-800 bg-neutral-950">
@@ -116,6 +122,9 @@ export default async function AdminPage() {
                     ) : (
                       <p className="text-sm text-neutral-400">No audio</p>
                     )}
+                  </td>
+                  <td className="p-4 border-b border-neutral-800">
+                    <FavoriteButton song={song.id} isFavorite={song.favorite} />
                   </td>
                   <td className="p-4 border-b border-neutral-800">
                     <button

@@ -1,26 +1,33 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { PiHeartStraightLight } from "react-icons/pi";
 import slugify from "slugify";
 import { db } from "../drizzle/db";
-
-const songs = await db.query.songs.findMany();
+import FavoriteButton from "./components/FavoriteButton";
+import { songs as songsTable } from "@/drizzle/schema";
+import { asc } from "drizzle-orm";
 
 export const metadata: Metadata = {
   title: "Your Library",
-  description: `You have ${songs.length} songs in your library`,
+  description: "Songs added to your library.",
 };
 
-function makeSlug(artist: string, title: string) {
-  return `/${slugify(artist)}/${slugify(title)}`;
-}
-
 export default async function HomePage() {
+  const songs = await db
+    .select()
+    .from(songsTable)
+    .orderBy(asc(songsTable.artist), asc(songsTable.title));
+
+  function makeSlug(artist: string, title: string) {
+    return `/${slugify(artist)}/${slugify(title)}`;
+  }
+
   return (
     <div>
       <h2 className="font-semibold text-3xl">{metadata.title?.toString()}</h2>
-      <p className="leading-5 mt-3 opacity-50">{metadata.description}</p>
+      <p className="leading-5 mt-3 opacity-50">
+        You have {songs.length} songs in your library
+      </p>
 
       <ul className="mt-10 grid md:grid-cols-3 lg:grid-cols-5 gap-8">
         {songs.map((song, index) => (
@@ -44,13 +51,9 @@ export default async function HomePage() {
               <p className="text-neutral-500 text-xs font-semibold mt-3">
                 {song.artist}
               </p>
-              <button
-                type="button"
-                title="Favorite this song"
-                className="focus:outline-none absolute bottom-4 right-4"
-              >
-                <PiHeartStraightLight size={20} />
-              </button>
+              <div className="absolute bottom-4 right-4">
+                <FavoriteButton song={song.id} isFavorite={song.favorite} />
+              </div>
             </div>
           </li>
         ))}
