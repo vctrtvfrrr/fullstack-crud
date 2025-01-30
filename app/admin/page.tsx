@@ -10,12 +10,16 @@ import {
 } from "react-icons/pi";
 import FavoriteButton from "../_components/FavoriteButton";
 import Modal from "../_components/Modal";
-import { getSongs } from "../_repositories/songs";
+import { deleteSong, getSongs } from "../_repositories/songs";
 import SongUploadForm from "./form";
 
+type Song = typeof songsTable.$inferSelect;
+
 export default function AdminPage() {
-  const [songs, setSongs] = useState<Array<typeof songsTable.$inferSelect>>([]);
+  const [songs, setSongs] = useState<Song[]>([]);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [currentDeleteSong, setCurrentDeleteSong] = useState<Song>();
 
   async function fetchSongs() {
     const songs = await getSongs();
@@ -25,6 +29,19 @@ export default function AdminPage() {
   useEffect(() => {
     fetchSongs();
   }, []);
+
+  function openDeleteDialog(song: typeof songsTable.$inferSelect) {
+    setCurrentDeleteSong(song);
+    setIsDeleteDialogOpen(true);
+  }
+
+  async function handleDelete() {
+    if (!currentDeleteSong) return;
+    await deleteSong(currentDeleteSong.id);
+    await fetchSongs();
+    setIsDeleteDialogOpen(false);
+  }
+
   return (
     <div>
       <div className="relative flex flex-col w-full h-full">
@@ -151,6 +168,7 @@ export default function AdminPage() {
                     <button
                       type="button"
                       className="rounded-md border border-transparent py-2 px-4 inline-flex items-center text-center text-sm transition-all text-red-600 hover:bg-neutral-100 focus:bg-neutral-100 active:bg-neutral-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                      onClick={() => openDeleteDialog(song)}
                     >
                       <PiTrashLight size={16} className="mr-1.5" />
                       Delete
@@ -173,6 +191,38 @@ export default function AdminPage() {
             setIsFormModalOpen(false);
           }}
         />
+      </Modal>
+
+      <Modal
+        isOpen={isDeleteDialogOpen}
+        closeAction={() => setIsDeleteDialogOpen(false)}
+      >
+        {currentDeleteSong && (
+          <div className="flex flex-col p-6">
+            <h4 className="text-xl mb-1 font-semibold text-neutral-700 text-center">
+              Deleting &quot;<em>{currentDeleteSong.title}</em>&quot;
+            </h4>
+            <p className="mb-3 mt-1 text-neutral-500 text-center">
+              Are you sure you want to delete this song?
+            </p>
+            <div className="flex space-x-2">
+              <button
+                type="button"
+                className="w-full mx-auto select-none rounded border border-neutral-600 py-2 px-4 text-center text-sm font-semibold text-neutral-600 transition-all hover:bg-neutral-600 hover:text-white hover:shadow-md hover:shadow-neutral-600/20 active:bg-neutral-700 active:text-white active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                onClick={() => setIsDeleteDialogOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="w-full mx-auto select-none rounded bg-red-600 py-2 px-4 text-center text-sm font-semibold text-white shadow-md shadow-red-900/10 transition-all hover:bg-red-700 hover:shadow-lg hover:shadow-red-900/20 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                onClick={handleDelete}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );
