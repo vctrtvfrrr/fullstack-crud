@@ -6,7 +6,7 @@ import {
   PiTrashLight,
 } from "react-icons/pi";
 import { getSongs } from "../_repositories/songs";
-import FavoriteButton from "../components/FavoriteButton";
+import FavoriteButton from "../_components/FavoriteButton";
 
 export default async function AdminPage() {
   const songs = await getSongs();

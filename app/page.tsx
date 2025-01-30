@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import slugify from "slugify";
 import { getSongs } from "./_repositories/songs";
-import FavoriteButton from "./components/FavoriteButton";
+import FavoriteButton from "./_components/FavoriteButton";
 
 export const metadata: Metadata = {
   title: "Your Library",
