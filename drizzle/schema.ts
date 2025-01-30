@@ -18,6 +18,7 @@ const songs = pgTable("songs", {
   poster: varchar("poster", { length: 256 }),
   audio: varchar("audio", { length: 256 }),
   favorite: boolean().default(false).notNull(),
+  slug: varchar("slug", { length: 200 }).unique().notNull(),
   ...timestamps,
 });
 

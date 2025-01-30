@@ -12,11 +12,21 @@ export async function getSongs() {
     .orderBy(asc(songsTable.artist), asc(songsTable.title));
 }
 
-export async function getSong(id: number) {
+export async function getSongById(id: number) {
   const result = await db
     .select()
     .from(songsTable)
     .where(eq(songsTable.id, id))
+    .limit(1);
+
+  return result[0];
+}
+
+export async function getSongBySlug(slug: string) {
+  const result = await db
+    .select()
+    .from(songsTable)
+    .where(eq(songsTable.slug, slug))
     .limit(1);
 
   return result[0];
