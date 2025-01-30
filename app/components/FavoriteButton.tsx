@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PiHeartStraightFill, PiHeartStraightLight } from "react-icons/pi";
-import { updateFavorite } from "../_lib/actions/favorites";
+import { updateFavorite } from "../_repositories/favorites";
 
 export default function FavoriteButton({
   song,
