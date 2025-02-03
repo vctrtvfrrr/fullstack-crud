@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import slugify from "slugify";
-import { getSongs } from "./_repositories/songs";
 import FavoriteButton from "./_components/FavoriteButton";
+import Search from "./_components/Search";
+import { getSongs } from "./_repositories/songs";
 
 export const metadata: Metadata = {
   title: "Your Library",
@@ -19,10 +20,18 @@ export default async function HomePage() {
 
   return (
     <div>
-      <h2 className="font-semibold text-3xl">{metadata.title?.toString()}</h2>
-      <p className="leading-5 mt-3 opacity-50">
-        You have {songs.length} songs in your library
-      </p>
+      <div className="flex justify-between">
+        <div>
+          <h2 className="font-semibold text-3xl">
+            {metadata.title?.toString()}
+          </h2>
+          <p className="leading-5 mt-3 opacity-50">
+            You have {songs.length} songs in your library
+          </p>
+        </div>
+
+        <Search />
+      </div>
 
       <ul className="mt-10 grid md:grid-cols-3 lg:grid-cols-5 gap-8">
         {songs.map((song, index) => (

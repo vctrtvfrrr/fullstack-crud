@@ -2,7 +2,7 @@
 
 import { db } from "@/drizzle/db";
 import { songsTable } from "@/drizzle/schema";
-import { asc, eq, isNull } from "drizzle-orm";
+import { asc, eq, ilike, isNull } from "drizzle-orm";
 
 export async function getSongs() {
   return await db
@@ -10,6 +10,17 @@ export async function getSongs() {
     .from(songsTable)
     .where(isNull(songsTable.deletedAt))
     .orderBy(asc(songsTable.artist), asc(songsTable.title));
+}
+
+export async function searchSongs(query: string) {
+  const results = await db
+    .select()
+    .from(songsTable)
+    .where(ilike(songsTable.title, `%${query}%`));
+
+  console.log(results);
+
+  return results;
 }
 
 export async function getSongById(id: number) {
